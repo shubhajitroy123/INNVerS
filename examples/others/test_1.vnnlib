@@ -1,0 +1,17 @@
+; test.onnx property 1
+
+(declare-const X_0 Real)
+(declare-const X_1 Real)
+
+(declare-const Y_0 Real)
+
+; Unscaled Input 0:
+(assert (<= X_0 7))
+(assert (>= X_0 2))
+
+; Unscaled Input 1:
+(assert (<= X_1 5))
+(assert (>= X_1 1))
+
+; Unsafe
+(assert (> Y_0 19))
