@@ -3,7 +3,7 @@
 #!/bin/sh
 
 #sudo apt install git
-#git clone https://github.com/dassarthak18/INNVerS.git
+#git clone https://github.com/iacs-csu-2020/INNVerS.git
 #cd INNVerS
 
 cd vnncomp_scripts
