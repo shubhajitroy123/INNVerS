@@ -9,10 +9,13 @@ fi
 echo "Installing INNVerS"
 
 #installing tool
-apt update
-apt install -y python3 python3-pip #Python 3.7 or higher
-apt install libprotoc-dev protobuf-compiler #prerequisite for ONNX
+
+#Python 3.7 or higher
+apt-get update && apt-get install -y software-properties-common gcc && add-apt-repository -y ppa:deadsnakes/ppa
+apt-get update && apt-get install -y python3.7 python3-distutils python3-pip python3-apt libprotoc-dev protobuf-compiler
+
 #apt install -y psmisc && #for killall, used in prepare_instance.sh
+
 pip3 install numpy #Numpy
 pip3 install ortools #Google OR-Tools for MILP optimization
 pip3 install onnx==1.8.1 #ONNX for .onnx file processing
