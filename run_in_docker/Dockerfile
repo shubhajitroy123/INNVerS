@@ -18,7 +18,8 @@ RUN chmod u+x /$TOOL_NAME/$SCRIPTS_DIR/run_instance.sh
 
 RUN apt-get update && apt-get install -y software-properties-common gcc && add-apt-repository -y ppa:deadsnakes/ppa
 RUN apt-get update && apt-get install -y python3.7 python3-distutils python3-pip python3-apt
-RUN pip3 install numpy ortools protobuf-compiler z3-solver onnx==1.8.1
+RUN pip3 install numpy ortools protobuf-compiler z3-solver
+RUN pip3 install onnx==1.8.1
 
 # run vnncomp
 
