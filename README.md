@@ -15,7 +15,7 @@ A tool for verification of ReLU neural network (for example, Acas-Xu) properties
 4. **ONNX for Python3.** Can be installed using the terminal command (in Debian-based systems)
 
     ```shell
-       sudo apt install protobuf-compiler
+       sudo apt install libprotoc-dev protobuf-compiler
        pip3 install onnx==1.8.1
     ```
     
