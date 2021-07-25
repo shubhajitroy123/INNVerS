@@ -35,4 +35,4 @@ Source code (written in Python3) is in the ./src/ directory. Three bash scripts 
 2. The script prepare_instance.sh prepares an instance to be executed.
 3. The script run_instance.sh runs the tool on a given instance and stores the result in a plaintext file.
 
-The ./run_in_docker/ directory contains a Dockerfile and the corresponding run_in_docker.sh script from vnncomp-2021 repository for docker testing (see the directory README.md for details.) For a sanity check of the tool, a run_examples.sh script has been provided that runs an acasxu benchmark as well as two custom benchmarks prepared by the authors.
+For a sanity check of the tool, a run_examples.sh script has been provided that runs an acasxu benchmark as well as two custom benchmarks prepared by the authors.
