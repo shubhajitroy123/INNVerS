@@ -15,7 +15,7 @@ fi
 echo "Preparing INNVerS for benchmark instance in category '$benchmark' with neural network '$onnxpath' and property file '$libpath'."
 
 #killing any zombie processes
-killall -q python3
+#killall -q python3
 
 if [ "$benchmark" = "acasxu" ] || [ "$benchmark" = "test" ] || [ "$benchmark" = "others" ]; then
 	exit 0
