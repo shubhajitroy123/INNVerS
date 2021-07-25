@@ -9,7 +9,7 @@ fi
 echo "Installing INNVerS"
 
 #installing tool
-apt update &&
+#apt update &&
 apt install -y python3 python3-pip && #Python 3.7 or higher
 #apt install -y psmisc && #for killall, used in prepare_instance.sh
 pip3 install numpy && #Numpy
