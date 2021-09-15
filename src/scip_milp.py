@@ -1,5 +1,21 @@
+import onnx
 import numpy as np
 from ortools.linear_solver import pywraplp
+import caffe2.python.onnx.backend as backend
+
+def new_py(file_name,input_lb,input_ub):
+	m = onnx.load(file_name)
+	rep = backend.prepare(m, device="CPU")
+	inp = []
+	for i in range(len(input_lb)):
+		inp.append([input_lb[i],input_ub[i]])
+	check = [[i,j,k,l,m] for i in inp[0] for j in inp[1] for k in inp[2] for l in inp[3] for m in inp[4]]
+	output = []
+	for i in range(len(check)):
+		k = np.array(check[i]).astype(np.float32)
+		o = rep.run(k)
+		output.append([o[0]])
+		print(o[0])
 
 #SCIP optimization function
 def scip_py(input_lb,input_ub,bias,weight):
