@@ -5,7 +5,7 @@ import caffe2.python.onnx.backend as backend
 
 def new_py(file_name,input_lb,input_ub):
 	m = onnx.load(file_name)
-	rep = backend.prepare(m, device="CPU")
+	rep = backend.prepare(m, device="GPU")
 	inp = []
 	for i in range(len(input_lb)):
 		inp.append([input_lb[i],input_ub[i]])
