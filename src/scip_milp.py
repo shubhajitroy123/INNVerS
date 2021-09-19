@@ -3,25 +3,98 @@ import numpy as np
 from ortools.linear_solver import pywraplp
 import caffe2.python.onnx.backend as backend
 
+def onnxcall(A):
+	k = np.array(A).astype(np.float32)
+	o = rep.run(k)
+	return o[0]
+
 def find_ub(ar,pos,p):
 	while p >= 0.0001:
+
 		for i in range(len(ar)):
-			k = np.array(ar[j]).astype(np.float32)
-			o = rep.run(k)
-			output.append(o[0][pos])
+			out = onnxcall(ar[i])
+			output.append(out[pos])
+
 		maxi = max(output)
 		maxi_pos = output.index(maxi)
-		prev = ar
+		maxi_inp = ar[maxi_pos] 
+		prev = ar.copy()
+
+		zipped = zip(*prev)
+		type(zipped)
+
+		arr = []
+		for i in list(zipped):
+			arr.append(set(i))
+
+		A = []
+		for i in arr:
+			t = list(i)
+			A.append(t)
+
+		for i in range(len(maxi_inp)):
+			if maxi_inp[i] == A[i][0]:
+				A[i][1] = (maxi_inp[i]+A[i][1])/2
+			else:
+				A[i][0] = (maxi_inp[i]+A[i][0])/2
+
+		ite = [[i,j,k,l,m] for i in A[0] for j in A[1] for k in A[2] for l in A[3] for m in A[4]]
+
+		if maxi_inp[pos] == A[pos][0]:
+			p = maxi_inp[pos] - A[pos][1]
+		else:
+			p = maxi_inp[pos] - A[pos][0]
+
+		if p < 0.0001:
+			break
+
+		ret = find_ub(ite,pos,p)
+
+	return maxi
 
 def find_lb(ar,pos,p):
 	while p >= 0.0001:
+
 		for i in range(len(ar)):
-			k = np.array(ar[j]).astype(np.float32)
-			o = rep.run(k)
-			output.append(o[0][pos])
+			out = onnxcall(ar[i])
+			output.append(out[pos])
+
 		mini = min(output)
 		mini_pos = output.index(mini)
-		prev = ar
+		mini_inp = ar[mini_pos] 
+		prev = ar.copy()
+
+		zipped = zip(*prev)
+		type(zipped)
+
+		arr = []
+		for i in list(zipped):
+			arr.append(set(i))
+
+		A = []
+		for i in arr:
+			t = list(i)
+			A.append(t)
+
+		for i in range(len(mini_inp)):
+			if mini_inp[i] == A[i][0]:
+				A[i][1] = (mini_inp[i]+A[i][1])/2
+			else:
+				A[i][0] = (mini_inp[i]+A[i][0])/2
+
+		ite = [[i,j,k,l,m] for i in A[0] for j in A[1] for k in A[2] for l in A[3] for m in A[4]]
+
+		if mini_inp[pos] == A[pos][0]:
+			p = mini_inp[pos] - A[pos][1]
+		else:
+			p = mini_inp[pos] - A[pos][0]
+
+		if p < 0.0001:
+			break
+
+		ret = find_lb(ite,pos,p)
+		
+	return mini
 
 def new_py(file_name,input_lb,input_ub):
 	m = onnx.load(file_name)
@@ -30,12 +103,17 @@ def new_py(file_name,input_lb,input_ub):
 
 	for i in range(len(input_lb)):
 		inp.append([input_lb[i],input_ub[i]])
+
 	check = [[i,j,k,l,m] for i in inp[0] for j in inp[1] for k in inp[2] for l in inp[3] for m in inp[4]]
 
+	u = []
+	l = []
 	for i in range(len(input_lb)):
 		p = input_ub[i] - input_lb[i]
 		u.append(find_ub(check,i,p))
 		l.append(find_lb(check,i,p))
+
+	return [l,u]
 
 #SCIP optimization function
 def scip_py(input_lb,input_ub,bias,weight):
