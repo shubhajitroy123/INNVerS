@@ -95,8 +95,8 @@ except IndexError:
 	weight = []
 	for i in weight_t:
 		weight.append(np.transpose(i))
-	new_py(onnxFile,input_lb,input_ub)
-	bound = scip_py(input_lb,input_ub,bias,weight)
+	bound = new_py(onnxFile,input_lb,input_ub)
+	#bound = scip_py(input_lb,input_ub,bias,weight)
 
 #property checking and returning the answer
 

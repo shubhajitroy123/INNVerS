@@ -3,19 +3,21 @@ import numpy as np
 from ortools.linear_solver import pywraplp
 import caffe2.python.onnx.backend as backend
 
-def onnxcall(A):
+def onnxcall(A,rep):
 	k = np.array(A).astype(np.float32)
 	o = rep.run(k)
-	return o[0]
+	return o
 
-def find_ub(ar,pos,p):
+def find_ub(ar,pos,p,rep):
 	while p >= 0.0001:
 
+		output = []
 		for i in range(len(ar)):
-			out = onnxcall(ar[i])
-			output.append(out[pos])
+			out = onnxcall(ar[i],rep)
+			output.append(out[0])
 
-		maxi = max(output)
+		print(output)
+		maxi = np.max(output)
 		maxi_pos = output.index(maxi)
 		maxi_inp = ar[maxi_pos] 
 		prev = ar.copy()
@@ -46,20 +48,20 @@ def find_ub(ar,pos,p):
 			p = maxi_inp[pos] - A[pos][0]
 
 		if p < 0.0001:
+			return maxi
 			break
 
-		ret = find_ub(ite,pos,p)
+		find_ub(ite,pos,p,rep)
 
-	return maxi
-
-def find_lb(ar,pos,p):
+def find_lb(ar,pos,p,rep):
 	while p >= 0.0001:
 
+		output = []
 		for i in range(len(ar)):
-			out = onnxcall(ar[i])
+			out = onnxcall(ar[i],rep)
 			output.append(out[pos])
 
-		mini = min(output)
+		mini = np.min(output)
 		mini_pos = output.index(mini)
 		mini_inp = ar[mini_pos] 
 		prev = ar.copy()
@@ -90,11 +92,11 @@ def find_lb(ar,pos,p):
 			p = mini_inp[pos] - A[pos][0]
 
 		if p < 0.0001:
+			return mini
 			break
 
-		ret = find_lb(ite,pos,p)
+		find_lb(ite,pos,p,rep)
 		
-	return mini
 
 def new_py(file_name,input_lb,input_ub):
 	m = onnx.load(file_name)
@@ -110,8 +112,8 @@ def new_py(file_name,input_lb,input_ub):
 	l = []
 	for i in range(len(input_lb)):
 		p = input_ub[i] - input_lb[i]
-		u.append(find_ub(check,i,p))
-		l.append(find_lb(check,i,p))
+		u.append(find_ub(check,i,p,rep))
+		l.append(find_lb(check,i,p,rep))
 
 	return [l,u]
 
