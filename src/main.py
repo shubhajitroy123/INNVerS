@@ -102,12 +102,11 @@ except IndexError:
 
 sat_check = property_sat(propertyFile,input_size,bound)
 
-#file1 = open(resultFile, 'w')
+file1 = open(resultFile, 'w')
 if sat_check == "sat":
 	s = "violated"
 else:
 	s = "holds"
-#file1.write(s)
-print(s)
-#file1.close()
+file1.write(s)
+file1.close()
 
