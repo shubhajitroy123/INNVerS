@@ -16,7 +16,6 @@ def find_ub(ar,pos,p,rep):
 			out = onnxcall(ar[i],rep)
 			output.append(out[0][0][pos])
 
-		#print(output)
 		maxi = np.max(output)
 		maxi_pos = output.index(maxi)
 		maxi_inp = ar[maxi_pos] 
@@ -38,18 +37,15 @@ def find_ub(ar,pos,p,rep):
 				A[i][1] = (maxi_inp[i]+A[i][1])/2
 			else:
 				A[i][0] = (maxi_inp[i]+A[i][0])/2
-
-		#ar.clear()
+				
 		ar = [[i,j,k,l,m] for i in A[0] for j in A[1] for k in A[2] for l in A[3] for m in A[4]]
 
 		if maxi_inp[pos] == A[pos][0]:
 			p = maxi_inp[pos] - A[pos][1]
 		else:
 			p = maxi_inp[pos] - A[pos][0]
-		#print(p)
     
 		if p < 0.0001:
-			#print(f"max[{pos}]={maxi}")
 			return maxi
 
 def find_lb(ar,pos,p,rep):
@@ -89,9 +85,7 @@ def find_lb(ar,pos,p,rep):
 		else:
 			p = mini_inp[pos] - A[pos][0]
 
-		#print(p)
 		if p < 0.0001:
-			#print(f"Min[{pos}]={mini}")
 			return mini
 		
 
@@ -110,14 +104,10 @@ def new_py(file_name,input_lb,input_ub):
 	for i in range(len(input_lb)):
 		diff = input_ub[i] - input_lb[i]
 		ub = find_ub(check,i,diff,rep)
-		#print("u,i",ub,i)
 		u.append(ub)
-		#print("Enter lower bound")
 		lb = find_lb(check,i,diff,rep)
-		#print("l,i",lb,i)
 		l.append(lb)
-	print(l)
-	print(u)
+		
 	return [l,u]
 
 #SCIP optimization function
