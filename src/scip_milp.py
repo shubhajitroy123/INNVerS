@@ -14,16 +14,15 @@ def find_ub(ar,pos,p,rep):
 		output = []
 		for i in range(len(ar)):
 			out = onnxcall(ar[i],rep)
-			output.append(out[0])
+			output.append(out[0][0][pos])
 
-		print(output)
+		#print(output)
 		maxi = np.max(output)
 		maxi_pos = output.index(maxi)
 		maxi_inp = ar[maxi_pos] 
 		prev = ar.copy()
 
 		zipped = zip(*prev)
-		type(zipped)
 
 		arr = []
 		for i in list(zipped):
@@ -40,18 +39,18 @@ def find_ub(ar,pos,p,rep):
 			else:
 				A[i][0] = (maxi_inp[i]+A[i][0])/2
 
-		ite = [[i,j,k,l,m] for i in A[0] for j in A[1] for k in A[2] for l in A[3] for m in A[4]]
+		#ar.clear()
+		ar = [[i,j,k,l,m] for i in A[0] for j in A[1] for k in A[2] for l in A[3] for m in A[4]]
 
 		if maxi_inp[pos] == A[pos][0]:
 			p = maxi_inp[pos] - A[pos][1]
 		else:
 			p = maxi_inp[pos] - A[pos][0]
-
+		#print(p)
+    
 		if p < 0.0001:
+			#print(f"max[{pos}]={maxi}")
 			return maxi
-			break
-
-		find_ub(ite,pos,p,rep)
 
 def find_lb(ar,pos,p,rep):
 	while p >= 0.0001:
@@ -59,7 +58,7 @@ def find_lb(ar,pos,p,rep):
 		output = []
 		for i in range(len(ar)):
 			out = onnxcall(ar[i],rep)
-			output.append(out[pos])
+			output.append(out[0][0][pos])
 
 		mini = np.min(output)
 		mini_pos = output.index(mini)
@@ -67,7 +66,6 @@ def find_lb(ar,pos,p,rep):
 		prev = ar.copy()
 
 		zipped = zip(*prev)
-		type(zipped)
 
 		arr = []
 		for i in list(zipped):
@@ -84,25 +82,24 @@ def find_lb(ar,pos,p,rep):
 			else:
 				A[i][0] = (mini_inp[i]+A[i][0])/2
 
-		ite = [[i,j,k,l,m] for i in A[0] for j in A[1] for k in A[2] for l in A[3] for m in A[4]]
+		ar = [[i,j,k,l,m] for i in A[0] for j in A[1] for k in A[2] for l in A[3] for m in A[4]]
 
 		if mini_inp[pos] == A[pos][0]:
 			p = mini_inp[pos] - A[pos][1]
 		else:
 			p = mini_inp[pos] - A[pos][0]
 
+		#print(p)
 		if p < 0.0001:
+			#print(f"Min[{pos}]={mini}")
 			return mini
-			break
-
-		find_lb(ite,pos,p,rep)
 		
 
 def new_py(file_name,input_lb,input_ub):
 	m = onnx.load(file_name)
 	rep = backend.prepare(m, device="CPU")
-	inp = []
 
+	inp = []
 	for i in range(len(input_lb)):
 		inp.append([input_lb[i],input_ub[i]])
 
@@ -111,10 +108,16 @@ def new_py(file_name,input_lb,input_ub):
 	u = []
 	l = []
 	for i in range(len(input_lb)):
-		p = input_ub[i] - input_lb[i]
-		u.append(find_ub(check,i,p,rep))
-		l.append(find_lb(check,i,p,rep))
-
+		diff = input_ub[i] - input_lb[i]
+		ub = find_ub(check,i,diff,rep)
+		#print("u,i",ub,i)
+		u.append(ub)
+		#print("Enter lower bound")
+		lb = find_lb(check,i,diff,rep)
+		#print("l,i",lb,i)
+		l.append(lb)
+	print(l)
+	print(u)
 	return [l,u]
 
 #SCIP optimization function
