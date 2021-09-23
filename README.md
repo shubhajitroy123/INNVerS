@@ -26,7 +26,18 @@ A tool for verification of ReLU neural network (for example, Acas-Xu) properties
        pip3 install z3-solver
     ```
     Their [github repository](https://github.com/Z3Prover/z3) can be checked for further details.
+6. **PyTorch.** Can be installed from using the terminal command (in Debian-based systems with CPU)
     
+    ```shell
+       pip3 install torch==1.9.1+cpu torchvision==0.10.1+cpu torchaudio==0.9.1 -f https://download.pytorch.org/whl/torch_stable.html
+    ```
+    Their [website](https://pytorch.org/get-started/locally/) can be checked for further details.
+7. **Caffe2.** Can be installed from using the terminal command (in Debian-based systems)
+    
+    ```shell
+       pip3 install future onnx-caffe2
+    ```
+
 ## VNN Neural Network Verification Competition (VNN-COMP 2022) Version
 
 Source code (written in Python3) is in the ./src/ directory. Three bash scripts have been defined in the ./vnncomp_scripts/ directory as per competition rules.
