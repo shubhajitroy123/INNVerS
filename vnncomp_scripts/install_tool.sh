@@ -18,5 +18,7 @@ apt-get update && apt-get install -y python3.7 python3-distutils python3-pip pyt
 
 pip3 install numpy #Numpy
 pip3 install ortools #Google OR-Tools for MILP optimization
+pip3 install torch==1.9.1+cpu torchvision==0.10.1+cpu torchaudio==0.9.1 -f https://download.pytorch.org/whl/torch_stable.html #PyTorch
 pip3 install onnx==1.8.1 #ONNX for .onnx file processing
 pip3 install z3-solver #z3 Theorem Prover for .vnnlib file processing
+pip3 install future onnx-caffe2 #Caffe2
